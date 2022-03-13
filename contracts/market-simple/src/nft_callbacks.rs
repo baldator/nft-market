@@ -9,6 +9,8 @@ pub struct SaleArgs {
     pub token_type: TokenType,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub is_auction: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub end_at: Option<U64>,
 }
 
 trait NonFungibleTokenApprovalsReceiver {
@@ -58,7 +60,7 @@ impl NonFungibleTokenApprovalsReceiver for Contract {
             owner_paid_storage, signer_storage_required / STORAGE_PER_SALE, STORAGE_PER_SALE
         );
 
-        let SaleArgs { sale_conditions, token_type, is_auction } =
+        let SaleArgs { sale_conditions, token_type, is_auction, end_at } =
             near_sdk::serde_json::from_str(&msg).expect("Not valid SaleArgs");
 
         
@@ -85,6 +87,7 @@ impl NonFungibleTokenApprovalsReceiver for Contract {
                 sale_conditions,
                 bids,
                 created_at: U64(env::block_timestamp()/1000000),
+                end_at: end_at.unwrap_or(U64(0)),
                 token_type: token_type.clone(),
                 is_auction: is_auction.unwrap_or(false),
             },

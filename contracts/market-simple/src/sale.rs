@@ -18,6 +18,7 @@ pub struct Sale {
     pub sale_conditions: SaleConditions,
     pub bids: Bids,
     pub created_at: U64,
+    pub end_at: U64,
     pub is_auction: bool,
     pub token_type: Option<String>,
 }
@@ -83,6 +84,8 @@ impl Contract {
 
         let deposit = env::attached_deposit();
         assert!(deposit > 0, "Attached deposit must be greater than 0");
+        assert!((u64::from(sale.end_at)) > u64::from(env::block_timestamp()/1000000) || sale.end_at == U64(0), "You can't bid on a ended auction");
+        
 
         if !sale.is_auction && deposit == price {
             self.process_purchase(
