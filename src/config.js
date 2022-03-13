@@ -1,4 +1,4 @@
-const contractName = 'dev-1635425543381-88447653838944';
+const contractName = 'auction.balda.testnet';
 
 module.exports = function getConfig() {
 	let config = {
@@ -35,7 +35,7 @@ module.exports = function getConfig() {
 				viewMethods: ["get_guest", "get_token_ids", "nft_token", "get_sale"],
 			},
 			marketDeposit: "100000000000000000000000",
-			marketId: "market." + contractName,
+			marketId: contractName,
 		};
 	}
 
