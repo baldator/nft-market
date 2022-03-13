@@ -1,8 +1,8 @@
 [package]
-name = "nft_simple"
+name = "Few and Far"
 version = "0.1.0"
-authors = ["Near Inc <hello@nearprotocol.com>"]
-edition = "2018"
+authors = ["Few and Far  <hello@nearprotocol.com>"]
+edition = "2022"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
