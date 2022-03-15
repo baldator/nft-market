@@ -33,7 +33,6 @@ pub struct PurchaseArgs {
 impl Contract {
     /// for add sale see: nft_callbacks.rs
 
-    /// TODO remove without redirect to wallet? panic reverts
     #[payable]
     pub fn remove_sale(&mut self, nft_contract_id: ValidAccountId, token_id: String) {
         assert_one_yocto();

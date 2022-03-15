@@ -23,8 +23,6 @@ mod sale_views;
 
 near_sdk::setup_alloc!();
 
-// TODO check seller supports storage_deposit at ft_token_id they want to post sale in
-
 const GAS_FOR_FT_TRANSFER: Gas = 5_000_000_000_000;
 /// greedy max Tgas for resolve_purchase
 const GAS_FOR_ROYALTIES: Gas = 115_000_000_000_000;
@@ -40,7 +38,6 @@ pub type TokenId = String;
 pub type TokenType = Option<String>;
 pub type FungibleTokenId = AccountId;
 pub type ContractAndTokenId = String;
-// TODO: Capital U128
 pub type Payout = HashMap<AccountId, U128>;
 #[derive(Serialize)]
 #[serde(crate = "near_sdk::serde")]
