@@ -61,6 +61,11 @@ impl Contract {
             sale.owner_id,
             "Must be sale owner"
         );
+        assert_eq!(
+            sale.is_auction,
+            false,
+            "Can't change reserver price for an ongoing auction"
+        );
         if !self.ft_token_ids.contains(ft_token_id.as_ref()) {
             env::panic(format!("Token {} not supported by this market", ft_token_id).as_bytes());
         }
@@ -84,8 +89,9 @@ impl Contract {
 
         let deposit = env::attached_deposit();
         assert!(deposit > 0, "Attached deposit must be greater than 0");
-        assert!((u64::from(sale.end_at)) > u64::from(env::block_timestamp()/1000000) || sale.end_at == U64(0), "You can't bid on a ended auction");
-        
+        if sale.is_auction{
+            assert!((u64::from(sale.end_at)) > u64::from(env::block_timestamp()/1000000), "You can't bid on a ended auction");
+        }
 
         if !sale.is_auction && deposit == price {
             self.process_purchase(
@@ -167,6 +173,24 @@ impl Contract {
         let mut sale = self.sales.get(&contract_and_token_id).expect("No sale");
         let bids_for_token_id = sale.bids.remove(ft_token_id.as_ref()).expect("No bids");
         let bid = &bids_for_token_id[bids_for_token_id.len()-1];
+
+        if sale.is_auction {
+            assert!((u64::from(sale.end_at)) < u64::from(env::block_timestamp()/1000000), "Can't accept offer for unfinished auction");
+        }
+
+        let ft_token_id = "near".to_string();
+        let price = sale
+            .sale_conditions
+            .get(&ft_token_id)
+            .expect("Not for sale in NEAR")
+            .0;
+
+        if u128::from(bid.price) < u128::from(price) {
+            // Refund all bids as the reserve price hasn't been reached
+            self.refund_all_bids(&sale.bids);
+            return
+        }
+
         self.sales.insert(&contract_and_token_id, &sale);
         // panics at `self.internal_remove_sale` and reverts above if predecessor is not sale.owner_id
         self.process_purchase(

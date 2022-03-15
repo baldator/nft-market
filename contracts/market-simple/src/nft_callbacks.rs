@@ -63,6 +63,9 @@ impl NonFungibleTokenApprovalsReceiver for Contract {
         let SaleArgs { sale_conditions, token_type, is_auction, end_at } =
             near_sdk::serde_json::from_str(&msg).expect("Not valid SaleArgs");
 
+        if is_auction.unwrap_or(false) {
+            assert!(sale_conditions.keys().len() == 1, "Only one sale condition is accepted for auctions");
+        }
         
         for (ft_token_id, _price) in sale_conditions.clone() {
             if !self.ft_token_ids.contains(&ft_token_id) {
