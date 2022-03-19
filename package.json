@@ -5,7 +5,7 @@
     "author": "Few and Far",
     "scripts": {
         "dev:deploy": "yarn build:contracts && rm -rf neardev && (near dev-deploy || exit 0) && yarn patch:config",
-        "build:contracts": "cd contracts/marketplace && ./build.sh && cd ../..",
+        "build": "cd contracts/marketplace && ./build.sh && cd ../..",
         "test:unit": "(cd contracts && cargo test -- --nocapture --color always)"
     }
 }

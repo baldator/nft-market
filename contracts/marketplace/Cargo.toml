@@ -1,8 +1,8 @@
 [package]
-name = "Few and Far"
+name = "FewAndFar"
 version = "0.1.0"
 authors = ["Few and Far  <hello@nearprotocol.com>"]
-edition = "2022"
+edition = "2018"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
